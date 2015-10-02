@@ -21,7 +21,7 @@ import java.math.BigInteger
 
 import com.basho.riak.client.api.RiakClient
 import com.basho.riak.client.api.commands.indexes.{BigIntIndexQuery, BinIndexQuery, IntIndexQuery}
-import com.basho.riak.client.core.operations.CoveragePlanOperation.Response.CoverageEntry
+//import com.basho.riak.client.core.operations.CoveragePlanOperation.Response.CoverageEntry
 import com.basho.riak.client.core.query.{Namespace, Location}
 import com.basho.riak.client.core.util.BinaryValue
 import com.basho.riak.spark.rdd.{ReadConf, BucketDef}
@@ -66,7 +66,8 @@ private case class Query2iKeySingleOrRange[K](bucket: BucketDef, readConf: ReadC
         require(to.isEmpty, "Coverage Entry can't be used in a range manner, therefore 'to' parameter must be None")
         require(coverageEntry.isEmpty, "The Coverage Entry parameter mustn't be used for this type of query")
 
-        new BinIndexQuery.Builder(ns, index, ce.getCoverageContext)
+        //new BinIndexQuery.Builder(ns, index, ce.getCoverageContext)
+        throw new UnsupportedOperationException("Coverage  is not supported at the momemnt")
 
       case _ if isSuitableForIntIndex(from) => to match {
           case None => new IntIndexQuery.Builder(ns, index, convertToLong(from))
@@ -96,7 +97,8 @@ private case class Query2iKeySingleOrRange[K](bucket: BucketDef, readConf: ReadC
 
     if(coverageEntry.isDefined){
       // local 2i query (coverage entry is provided) either Equal or Range
-      builder.withCoverageContext(coverageEntry.get.getCoverageContext)
+      //builder.withCoverageContext(coverageEntry.get.getCoverageContext)
+      throw new UnsupportedOperationException("Coverage  is not supported at the momemnt")
     }
 
     nextToken match {

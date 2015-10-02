@@ -17,7 +17,7 @@
  */
 package com.basho.riak.spark.rdd.partitioner
 
-import com.basho.riak.client.api.commands.kv.CoveragePlan.Builder
+//import com.basho.riak.client.api.commands.kv.CoveragePlan.Builder
 import com.basho.riak.client.core.util.HostAndPort
 import com.basho.riak.spark.query.QueryData
 import com.basho.riak.spark.rdd.{RiakConnector, ReadConf, RiakPartition, BucketDef}
@@ -37,24 +37,25 @@ case class RiakLocalCoveragePartition[K] (
  */
 object RiakCoveragePlanBasedPartitioner {
   def partitions[K](connector: RiakConnector, bucket: BucketDef, readConf: ReadConf, queryData: QueryData[K]): Array[Partition] = {
-    connector.withSessionDo(session =>{
-      val cmd = new Builder(bucket.asNamespace())
-        .withMinPartitions(readConf.splitCount)
-        .build()
-
-      val coveragePlan = session.execute(cmd)
-
-      // TODO: add proper Coverage Plan logging
-
-      val partitions = for {
-        (ce, partitionIdx) <- coveragePlan.zipWithIndex
-        partition = new RiakLocalCoveragePartition(partitionIdx,
-            coveragePlan.hosts().toSet, HostAndPort.fromParts(ce.getHost, ce.getPort),
-            queryData.copy(coverageEntries = Some(Seq(ce)))
-          )
-      } yield partition
-
-      partitions.toArray
-    })
+//    connector.withSessionDo(session =>{
+//      val cmd = new Builder(bucket.asNamespace())
+//        .withMinPartitions(readConf.splitCount)
+//        .build()
+//
+//      val coveragePlan = session.execute(cmd)
+//
+//      // TODO: add proper Coverage Plan logging
+//
+//      val partitions = for {
+//        (ce, partitionIdx) <- coveragePlan.zipWithIndex
+//        partition = new RiakLocalCoveragePartition(partitionIdx,
+//            coveragePlan.hosts().toSet, HostAndPort.fromParts(ce.getHost, ce.getPort),
+//            queryData.copy(coverageEntries = Some(Seq(ce)))
+//          )
+//      } yield partition
+//
+//      partitions.toArray
+//    })
+    throw new UnsupportedOperationException("Coverage  is not supported at the momemnt")
   }
 }

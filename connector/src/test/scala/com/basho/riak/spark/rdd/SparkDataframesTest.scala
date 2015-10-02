@@ -22,12 +22,13 @@ import scala.reflect.runtime.universe
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SQLContext
 import org.junit.Assert._
-import org.junit.{ Before, Test }
+import org.junit.{Ignore, Before, Test}
 
 import com.basho.riak.spark.toSparkContextFunctions
 
 case class TestData(id: String, name: String, age: Int, category: String)
 
+@Ignore("Ignored since it depends on Coverage Plan")
 class SparkDataframesTest extends AbstractRDDTest {
 
   private val indexName = "creationNo"

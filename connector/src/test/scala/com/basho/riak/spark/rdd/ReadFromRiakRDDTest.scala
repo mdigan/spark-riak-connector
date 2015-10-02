@@ -20,7 +20,7 @@ package com.basho.riak.spark.rdd
 import java.math.BigInteger
 import java.util.UUID
 
-import org.junit.Test
+import org.junit.{Ignore, Test}
 import org.junit.Assert._
 
 import com.basho.riak.spark._
@@ -268,6 +268,7 @@ class ReadFromRiakRDDTest extends AbstractRDDTest{
       , data)
   }
 
+  @Ignore("Ignored since it depends on Coverage Plan")
   @Test
   def local2iRangeRead() ={
     val data = sc.riakBucket[UserTS](DEFAULT_NAMESPACE)

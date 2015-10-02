@@ -25,12 +25,14 @@ import com.basho.riak.spark.japi.SparkJavaUtil;
 import com.basho.riak.spark.japi.rdd.RiakJavaRDD;
 import com.basho.riak.spark.japi.SparkJavaUtil;
 import com.basho.riak.spark.japi.rdd.RiakJavaRDD;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@Ignore("Ignored since it depends on Coverage Plan")
 public class JavaRDDReadTest extends AbstractJavaSparkTest {
     private String CREATION_INDEX = "creationNo";
 

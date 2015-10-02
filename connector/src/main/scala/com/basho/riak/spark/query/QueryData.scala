@@ -17,7 +17,9 @@
  */
 package com.basho.riak.spark.query
 
-import com.basho.riak.client.core.operations.CoveragePlanOperation.Response.CoverageEntry
+//import com.basho.riak.client.core.operations.CoveragePlanOperation.Response.CoverageEntry
+
+case class CoverageEntry(question: String = "the answer to life the universe and everything")
 
 case class QueryData[T](
   // Might be None if represents the full bucket read

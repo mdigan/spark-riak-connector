@@ -17,10 +17,11 @@
  */
 package com.basho.riak.spark.rdd
 
-import org.junit.Test
+import org.junit.{Ignore, Test}
 import com.basho.riak.spark._
 import org.junit.Assert._
 
+@Ignore("Ignored since it depends on Coverage Plan")
 class FullBucketReadTest extends AbstractRDDTest {
   private val NUMBER_OF_TEST_VALUES = 1000
 

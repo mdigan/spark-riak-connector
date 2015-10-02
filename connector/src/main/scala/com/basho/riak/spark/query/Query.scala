@@ -20,7 +20,6 @@ package com.basho.riak.spark.query
 import com.basho.riak.client.api.RiakClient
 import com.basho.riak.client.api.cap.Quorum
 import com.basho.riak.client.api.commands.kv.{FetchValue, MultiFetch}
-import com.basho.riak.client.core.operations.CoveragePlanOperation.Response.CoverageEntry
 import com.basho.riak.client.core.query.{RiakObject, Location}
 import com.basho.riak.spark.rdd.{RiakConnector, ReadConf, BucketDef}
 import scala.collection.JavaConversions._
@@ -155,7 +154,7 @@ object Query{
         val ce = queryData.coverageEntries.get
         require(!ce.isEmpty)
 
-        new Query2iKeys[CoverageEntry](bucket, readConf, queryData.index.get, ce)
+        new Query2iKeys(bucket, readConf, queryData.index.get, ce)
     }
   }
 }
