@@ -31,7 +31,7 @@ object TimeSeriesToSparkSqlConversion {
     if (cell.hasBinaryValue || cell.hasString) {
       ColumnType.BINARY
     } else if (cell.hasBoolean) {
-      ColumnType.BINARY
+      ColumnType.BOOLEAN
     } else if (cell.hasInt || cell.hasLong) {
       ColumnType.INTEGER
     } else if (cell.hasMap) {
@@ -54,11 +54,11 @@ object TimeSeriesToSparkSqlConversion {
     case ColumnType.BOOLEAN =>
       cell.getBoolean
 
-    case ColumnType.INTEGER if cell.hasLong =>
-      cell.getLong
-
     case ColumnType.INTEGER if cell.hasInt =>
       cell.getInt
+
+    case ColumnType.INTEGER if cell.hasLong =>
+      cell.getLong
 
     case ColumnType.MAP =>
       cell.getMap
