@@ -36,7 +36,7 @@ class TSConversionTest extends Logging{
   
   case class SampleClass(int: Integer, date: Date, string: String)
 
-  def singleCellTest [T] (value: T, cell: Cell): Unit = {
+  private def singleCellTest [T] (value: T, cell: Cell): Unit = {
     val singleCellRow = new Row(cell)
     val sparkRow = TimeSeriesToSparkSqlConversion.asSparkRow(singleCellRow)
     assertEquals(1, sparkRow.length)
@@ -81,14 +81,14 @@ class TSConversionTest extends Logging{
   } 
   
   @Test
-  @Ignore
+  @Ignore("Cell.getDouble() is not implemented yet")
   def singleRowSingleDoubleCellTest(): Unit = {
     val double = 1.0d
     singleCellTest(double, new Cell(double))
   } 
   
   @Test
-  @Ignore
+  @Ignore("Cell.getDouble() is not implemented yet")
   def singleRowSingleDoubleCellMaxValueTest(): Unit = {
     val double = Double.MaxValue
     singleCellTest(double, new Cell(double))
@@ -128,7 +128,7 @@ class TSConversionTest extends Logging{
   }
   
   @Test
-  @Ignore
+  @Ignore("Set conversion is not supported yet")
   def singleRowSingleSetCellTest(): Unit = {
     val set = Set("abc", "111", "?>!")
     val cell = SetCell.fromSet(set, new TypeReference[String] {});
@@ -136,7 +136,7 @@ class TSConversionTest extends Logging{
   }
   
   @Test
-  @Ignore
+  @Ignore("Map conversion is not supported yet")
   def singleRowSingleMapCellTest(): Unit = {
     val millis = System.currentTimeMillis
     val date = new Date(millis)
