@@ -26,7 +26,6 @@ import org.junit.Assert._
 import com.basho.riak.client.core.util.BinaryValue
 import java.util.Date
 import java.util.Calendar
-import java.util.Arrays
 import scala.collection.JavaConversions._
 import com.basho.riak.client.core.query.timeseries.SetCell
 import com.fasterxml.jackson.core.`type`.TypeReference
@@ -40,15 +39,18 @@ class TSConversionTest extends Logging{
     val singleCellRow = new Row(cell)
     val sparkRow = TimeSeriesToSparkSqlConversion.asSparkRow(singleCellRow)
     assertEquals(1, sparkRow.length)
-    assertEquals(Seq(value), sparkRow.toSeq)
-    assertEquals(value.getClass, sparkRow.get(0).getClass)
+    assertNotNull(sparkRow.getAs[T](0))
+    assertSeqEquals(Seq(value), sparkRow.toSeq)
   }
-  
+
   @Test
   def singleRowSingleIntCellTest(): Unit = {
-    val int = 1
-    singleCellTest(int, new Cell(int))
-  } 
+    val int: Int = 1
+    val singleCellRow = new Row(new Cell(int))
+    val sparkRow = TimeSeriesToSparkSqlConversion.asSparkRow(singleCellRow)
+
+    assertSeqEquals(Seq(int.toLong), sparkRow.toSeq)
+  }
   
   @Test
   def singleRowSingleLongCellTest(): Unit = {
@@ -122,16 +124,15 @@ class TSConversionTest extends Logging{
   @Test
   def singleRowSingleRawNumericTest(): Unit = {
     val float = -42.02f
-    val ba = String.valueOf(float).getBytes();
-    val cell = Cell.newRawNumeric(ba);
+    val ba = String.valueOf(float).getBytes
+    val cell = Cell.newRawNumeric(ba)
     singleCellTest(float, cell)
   }
   
   @Test
-  @Ignore("Set conversion is not supported yet")
   def singleRowSingleSetCellTest(): Unit = {
     val set = Set("abc", "111", "?>!")
-    val cell = SetCell.fromSet(set, new TypeReference[String] {});
+    val cell = SetCell.fromSet(set, new TypeReference[String] {})
     singleCellTest(set, cell)
   }
   
@@ -155,7 +156,7 @@ class TSConversionTest extends Logging{
     val cells = List(new Cell(1), new Cell(date), new Cell("abc"))
     val row = new Row(cells)
     val sparkRow = TimeSeriesToSparkSqlConversion.asSparkRow(row)
-    val expected = List(1, millis, "abc")
+    val expected = List(1L, millis, "abc")
     assertSeqEquals(expected, sparkRow.toSeq)
   }
 
@@ -163,11 +164,9 @@ class TSConversionTest extends Logging{
     a match {
       case Nil => true
       case x::xs => 
-        {
           val bh = b.head
           val a = x.equals(b.head)
           x.equals(b.head) && compareElementwise(xs, b.tail)
-        }
     }
   }
 

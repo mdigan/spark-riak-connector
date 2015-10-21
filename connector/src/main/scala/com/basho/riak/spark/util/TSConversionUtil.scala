@@ -18,13 +18,15 @@
 package com.basho.riak.spark.util
 
 import com.basho.riak.client.core.query.timeseries.ColumnDescription.ColumnType
-import com.basho.riak.client.core.query.timeseries.{Cell, Row, ColumnDescription}
+import com.basho.riak.client.core.query.timeseries.{SetCell, Cell, Row, ColumnDescription}
+import com.fasterxml.jackson.core.`type`.TypeReference
 import scala.collection.convert.decorateAll._
 
 import scala.reflect.ClassTag
 
 // TODO: consider using implicit decorations like: row.asSpark
 object TimeSeriesToSparkSqlConversion {
+  private val STRING_TYPE_REFERENCE = new TypeReference[String] {}
 
   // Will be removed when corresponding method be introduced in the Cell
   private def cellType(cell: Cell): ColumnType = {
@@ -54,10 +56,9 @@ object TimeSeriesToSparkSqlConversion {
     case ColumnType.BOOLEAN =>
       cell.getBoolean
 
-    case ColumnType.INTEGER if cell.hasInt =>
-      cell.getInt
 
-    case ColumnType.INTEGER if cell.hasLong =>
+    case ColumnType.INTEGER =>
+      // To avoid potential ambiguity between Int and Long values all Riak TS Integer fields are always treated as Long
       cell.getLong
 
     case ColumnType.MAP =>
@@ -67,7 +68,7 @@ object TimeSeriesToSparkSqlConversion {
       cell.getFloat
 
     case ColumnType.SET =>
-      cell.getSet
+      SetCell.getSet(cell, STRING_TYPE_REFERENCE).asScala
 
     case ColumnType.TIMESTAMP =>
       cell.getTimestamp
