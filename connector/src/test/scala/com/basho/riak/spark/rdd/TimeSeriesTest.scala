@@ -72,50 +72,26 @@ class TimeSeriesTest extends AbstractRDDTest {
         Assume.assumeTrue(msg + " (See logs for the details)", false)
     }
 
-    //Store data in RIAK TS
+    // ----------  Storing test data into Riak TS
 
-    tsRangeStart = mkTimestamp(111111)
-    tsRangeEnd = mkTimestamp(111555)
+    val testData = List(
+      TimeSeriesData(111111, "bryce", 305.37f),
+      TimeSeriesData(111222, "bryce", 300.12f),
+      TimeSeriesData(111333, "bryce", 295.95f),
 
-    val tableName = DEFAULT_TS_NAMESPACE.getBucketType
-
-    val rows = List(
-      new Row(
-          new Cell(tsRangeStart),
-          new Cell("bryce"),
-          new Cell(305.37)
-        ),
-
-      new Row(
-          new Cell(mkTimestamp(111222)),
-          new Cell("bryce"),
-          new Cell(300.12)
-        ),
-
-      new Row(
-          new Cell(mkTimestamp(111333)),
-          new Cell("bryce"),
-          new Cell(295.95)
-        ),
-
-      new Row(
-          new Cell(mkTimestamp(111444)),
-          new Cell("ratman"),
-          new Cell(362.121)
-        ),
-
-      new Row(
-          new Cell(tsRangeEnd),
-          new Cell("ratman"),
-          new Cell(3502.212)
-        )
+      TimeSeriesData(111444, "ratman", 362.121f),
+      TimeSeriesData(111555, "ratman", 3502.212f)
     )
 
+    tsRangeStart = mkTimestamp(testData.minBy(_.time).time)
+    tsRangeEnd = mkTimestamp(testData.maxBy(_.time).time)
+
+    val tableName = DEFAULT_TS_NAMESPACE.getBucketType
+    val rows = testData.map(f => new Row( new Cell(f.time), new Cell(f.user_id), new Cell(f.temperature_k)))
     val storeOp = new TimeSeriesStoreOperation.Builder(tableName).withRows(rows).build()
 
     withRiakDo(session=>{
-      val r = session.getRiakCluster.execute(storeOp).get()
-      assert(true)
+      session.getRiakCluster.execute(storeOp).get()
     })
   }
 
