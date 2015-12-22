@@ -18,16 +18,16 @@
 package com.basho.riak.spark.rdd
 
 import scala.reflect.runtime.universe
-
 import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.SQLContext
 import org.junit.Assert._
 import org.junit.{ Before, Test }
-
 import com.basho.riak.spark.toSparkContextFunctions
+import org.junit.experimental.categories.Category
 
 case class TestData(id: String, name: String, age: Int, category: String)
 
+@Category(Array(classOf[RiakTSTests], classOf[RiakBDPTests]))
 class SparkDataframesTest extends AbstractRDDTest {
 
   private val indexName = "creationNo"
@@ -81,13 +81,13 @@ class SparkDataframesTest extends AbstractRDDTest {
   @Test
   def udfTest(): Unit = {
     sqlContextHolder.udf.register("stringLength", (s: String) => s.length)
-    val udf = sqlContextHolder.sql("select name, stringLength(name) strLgth from test order by strLgth").toJSON.collect
+    val udf = sqlContextHolder.sql("select name, stringLength(name) strLgth from test order by strLgth, name").toJSON.collect
     val expected = "[" +
       "{name:'Ben',strLgth:3}," +
       "{name:'John',strLgth:4}," + 
       "{name:'Mary',strLgth:4}," +
-      "{name:'Clair',strLgth:5}," +
       "{name:'Chris',strLgth:5}," +
+      "{name:'Clair',strLgth:5}," +
       "{name:'George',strLgth:6}" +
       "]"
     assertEqualsUsingJSON(expected, stringify(udf))

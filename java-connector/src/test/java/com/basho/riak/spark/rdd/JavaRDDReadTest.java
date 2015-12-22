@@ -17,19 +17,15 @@
  */
 package com.basho.riak.spark.rdd;
 
-import com.basho.riak.spark.japi.SparkJavaUtil;
-import com.basho.riak.spark.japi.rdd.RiakJavaRDD;
-import com.basho.riak.spark.japi.SparkJavaUtil;
-import com.basho.riak.spark.japi.rdd.RiakJavaRDD;
-import com.basho.riak.spark.japi.SparkJavaUtil;
-import com.basho.riak.spark.japi.rdd.RiakJavaRDD;
-import com.basho.riak.spark.japi.SparkJavaUtil;
-import com.basho.riak.spark.japi.rdd.RiakJavaRDD;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
+
+import com.basho.riak.spark.japi.SparkJavaUtil;
+import com.basho.riak.spark.japi.rdd.RiakJavaRDD;
 
 public class JavaRDDReadTest extends AbstractJavaSparkTest {
     private String CREATION_INDEX = "creationNo";
@@ -46,6 +42,7 @@ public class JavaRDDReadTest extends AbstractJavaSparkTest {
         "]";
     }
 
+    @Category(RiakCommonTests.class)
     @Test
     public void readJSONASString(){
         RiakJavaRDD<String> rdd = SparkJavaUtil.javaFunctions(jsc).riakBucket(DEFAULT_NAMESPACE(), String.class).
@@ -60,6 +57,7 @@ public class JavaRDDReadTest extends AbstractJavaSparkTest {
             "}", results.get(0));
     }
 
+    @Category({RiakBDPTests.class, RiakTSTests.class})
     @Test
     public void readAll(){
         RiakJavaRDD<String> rdd = SparkJavaUtil.javaFunctions(jsc).riakBucket(DEFAULT_NAMESPACE(), String.class).

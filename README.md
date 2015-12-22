@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/basho/spark-riak-connector.svg?branch=develop)](https://travis-ci.org/basho/spark-riak-connector)
+
 # Spark Riak Connector
 
 Spark Riak connector allows you to expose data stored in Riak buckets as Spark RDDs, as well as output data from Spark RDDs into Riak buckets. 
@@ -95,8 +97,8 @@ The following options are available on `SparkConf` object:
 Property name                                  | Description                                       | Default value
 -----------------------------------------------|---------------------------------------------------|--------------------
 spark.riak.connection.host                     | IP:port of a Riak node protobuf interface         | 127.0.0.1:8087
-spark.riak.connection.host.connections.min     | Minimum number of parallel connections to Riak    | 10
-spark.riak.connection.host.connections.max     | Maximum number of parallel connections to Riak    | 30
+spark.riak.connections.min                     | Minimum number of parallel connections to Riak    | 10
+spark.riak.connections.max                     | Maximum number of parallel connections to Riak    | 30
 spark.riak.input.fetch-size                    | Number of keys to fetch in a single round-trip to Riak | 1000
 
 
@@ -106,8 +108,8 @@ Example:
 val conf = new SparkConf()
         .setAppName("My Spark Riak App")
         .set("spark.riak.connection.host", "10.0.4.1:8087")
-        .set("spark.riak.connection.host.connections.min", "20")
-        .set("spark.riak.connection.host.connections.max", "50")
+        .set("spark.riak.connections.min", "20")
+        .set("spark.riak.connections.max", "50")
 
 val sc = new SparkContext("spark://10.0.4.1:7077", "test", conf)
 ```
@@ -181,6 +183,14 @@ Define the output bucket and issue `saveToRiak` method on an RDD:
 val MY_OUTPUT_BUCKET = new Namespace("output-data")
 
 rdd.saveToRiak(MY_OUTPUT_BUCKET)
+```
+
+### Reading data from Riak TS bucket
+
+Riak TS buckets can be queried using sql() function:
+
+```scala
+val rdd = sc.riakTSBucket(tableName).sql(s"SELECT * FROM $tableName WHERE time >= $from AND time <= $to")
 ```
 
 ## Examples
